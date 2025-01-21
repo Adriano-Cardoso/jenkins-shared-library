@@ -21,4 +21,5 @@ def call(String message) {
         // Falha no pipeline caso a mensagem não tenha sido recebida como esperado
         error "Message was not received correctly by the Echo Server!"
     }
+    
 }
