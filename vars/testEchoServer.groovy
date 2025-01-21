@@ -7,10 +7,12 @@ def call(String message) {
         returnStdout: true
     ).trim()
 
-    echo "Response from Echo Server: ${response}"
+    echo "Raw response from Echo Server: ${response}"
 
-    // Extrai apenas o corpo da resposta HTTP para validação
-    def responseBody = response.split("\r\n\r\n")[-1].trim()
+    // Utiliza uma regex para capturar apenas o corpo da resposta HTTP
+    def responseBody = (response =~ /(?:\r?\n){2}(.*)/)[0][1]?.trim()
+
+    echo "Extracted Response Body: ${responseBody}"
 
     // Verifica se o corpo da resposta contém a mensagem esperada
     if (responseBody == "Message Received: ${message}") {
