@@ -1,4 +1,4 @@
-def call(String message) {
+def testEchoServer(String message) {
     echo "Testing with message: ${message}"
 
     // Envia a mensagem ao Echo Server usando curl
@@ -9,17 +9,22 @@ def call(String message) {
 
     echo "Raw response from Echo Server: ${response}"
 
-    // Utiliza uma regex para capturar apenas o corpo da resposta HTTP
-    def responseBody = (response =~ /(?:\r?\n){2}(.*)/)[0][1]?.trim()
+    // Verifique se a resposta contém o corpo esperado
+    def responseBody = null
+    def match = (response =~ /(?:\r?\n){2}(.*)/)
+    
+    if (match) {
+        responseBody = match[0][1]?.trim()
+        echo "Extracted Response Body: ${responseBody}"
+    } else {
+        error "Unexpected response format, no body extracted"
+    }
 
-    echo "Extracted Response Body: ${responseBody}"
-
-    // Verifica se o corpo da resposta contém a mensagem esperada
+    // Verifique se o corpo da resposta contém a mensagem esperada
     if (responseBody == "Message Received: ${message}") {
         echo "Message received correctly by the Echo Server!"
     } else {
         // Falha no pipeline caso a mensagem não tenha sido recebida como esperado
         error "Message was not received correctly by the Echo Server!"
     }
-    
 }
