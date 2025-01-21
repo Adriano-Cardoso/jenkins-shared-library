@@ -1,18 +1,19 @@
 def call(String message) {
     echo "Testing with message: ${message}"
 
-    // Envia a mensagem para o Echo Server
+    // Send the message to the Echo Server using curl
     def response = sh(
-        script: "echo '${message}' | nc localhost 8081",
+        script: "curl -X POST -d '${message}' http://localhost:8081",
         returnStdout: true
     ).trim()
 
     echo "Response from Echo Server: ${response}"
 
-    // Valida a resposta do Echo Server
+    // Validate the response from the Echo Server
     if (response == "Message Received: ${message}") {
         echo "Message received correctly by the Echo Server!"
     } else {
+        // Fail the pipeline if the message was not received as expected
         error "Message was not received correctly by the Echo Server!"
     }
 }
